@@ -31,6 +31,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const highlightsEl = document.getElementById("jobDetailHighlights");
   const companyReviewsSection = document.getElementById("companyReviewsSection");
   const companyReviewsList = document.getElementById("companyReviewsList");
+  const companyReviewsEl = companyReviewsList;
   const companyReviewForm = document.getElementById("companyReviewForm");
   const companyReviewName = document.getElementById("crName");
   const companyReviewRating = document.getElementById("crRating");
@@ -235,6 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ${job.is_premium ? '<span class="badge badge-premium">Premium</span>' : ""}
         ${job.is_shift ? '<span class="badge badge-shift">Shift</span>' : ""}
         ${job.company_name ? '<span class="badge badge-verified">Verified</span>' : ""}
+        ${Number(job.is_approved) !== 1 ? '<span class="badge badge-pending">Pending approval</span>' : ""}
         <span class="match-pill">${matchScore}% Match</span>
       `;
     }
@@ -254,8 +256,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     setText(descEl, job.description || "");
 
+    // Disable apply button for unapproved jobs
+    if (applyBtn && Number(job.is_approved) !== 1) {
+      applyBtn.textContent = "Pending approval";
+      applyBtn.classList.add("btn-disabled");
+      applyBtn.style.pointerEvents = "none";
+      applyBtn.href = "#";
+    }
+
     // Check if user has already applied for this job
-    if (applyBtn) {
+    if (applyBtn && Number(job.is_approved) === 1) {
       const token = localStorage.getItem("token");
       if (token) {
         try {
@@ -320,6 +330,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (saveBtn || saveTopBtn) {
       const token = localStorage.getItem("token");
+      const canSave = Number(job.is_approved) === 1;
       const syncSaveButtons = (saved) => {
         if (saveBtn) saveBtn.textContent = saved ? "Saved" : "Save job";
         if (saveTopBtn) {
@@ -329,11 +340,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
       };
 
+      if (!canSave) {
+        saveBtn?.classList.add("hidden");
+        saveTopBtn?.classList.add("hidden");
+      }
+
       syncSaveButtons(!!job.is_saved);
 
       const handleSave = async () => {
         if (!token) {
           showWarning("Login required");
+          return;
+        }
+        if (!canSave) {
+          showWarning("This job is not available to save yet.");
           return;
         }
         const saved = saveBtn ? saveBtn.textContent === "Saved" : /Saved/i.test(saveTopBtn?.textContent || "");

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Seed Demo Data</title>
+</head>
+<body>
+    <h1>Job Portal Demo Seeder</h1>
+    <button onclick="seedDemo()">Seed Demo Data</button>
+    <p id="status"></p>
+
+    <script>
+        async function seedDemo() {
+            const status = document.getElementById('status');
+            status.textContent = 'Seeding...';
+            
+            try {
+                const response = await fetch('/api/admin/seed-demo', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                status.textContent = response.ok ? 'Success: ' + data.message : 'Error: ' + (data.error || 'Unknown error');
+            } catch (err) {
+                status.textContent = 'Error: ' + err.message;
+            }
+        }
+
+        // Auto-seed on page load
+        window.addEventListener('load', seedDemo);
+    </script>
+</body>
+</html>

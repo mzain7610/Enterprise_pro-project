@@ -6,7 +6,7 @@
   <title>My Applications | JobPortal</title>  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232563eb' width='100' height='100'/><text x='50' y='65' font-size='50' font-weight='bold' text-anchor='middle' fill='white' font-family='system-ui'>JP</text></svg>">  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/icons.css" />
   <link rel="stylesheet" href="css/global.css" />
 </head>
 <body class="dashboard-page">
@@ -26,7 +26,7 @@
       <a href="profile.html" class="nav-profile-chip" aria-label="Profile">
         <span class="nav-profile-avatar"><i class="fa-solid fa-user"></i></span>
       </a>
-      <button id="themeToggle" class="btn btn-ghost">&#9999;&#65039;</button>
+      <button id="themeToggle" class="btn btn-ghost">🌙</button>
       <button id="logoutBtn" class="btn btn-outline">Logout</button>
   </nav>
 
@@ -76,35 +76,122 @@
       <a href="#interviews-panel" class="dashboard-tab"><i class="fa-solid fa-calendar-check"></i> Interviews</a>
       <a href="#saved-jobs-panel" class="dashboard-tab"><i class="fa-solid fa-bookmark"></i> Saved Jobs</a>
       <a href="#referrals-panel" class="dashboard-tab"><i class="fa-solid fa-user-plus"></i> Referrals</a>
+      <a href="#job-alerts-panel" class="dashboard-tab"><i class="fa-solid fa-bell"></i> Job Alerts</a>
+    </section>
+
+    <section id="dashboard-overview" class="dashboard-panel">
+      <h2>Overview</h2>
+      <div class="dashboard-overview-grid">
+        <div class="dashboard-card">
+          <h3>Shift Alerts</h3>
+          <div id="shiftAlerts" class="shift-alert-list"></div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Job Alerts</h3>
+          <div id="jobAlerts" class="alert-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="recommendations-panel" class="dashboard-panel">
+      <h2>For You</h2>
+      <div class="panel-body">
+        <p class="p-muted">Job recommendations will appear here soon.</p>
+      </div>
+    </section>
+
+    <section id="applications-panel" class="dashboard-panel">
+      <h2>Applications</h2>
       <div id="applications" class="application-list"></div>
-        <div id="savedJobs" class="saved-jobs-list"></div>
-        <div id="shiftAlerts" class="shift-alert-list"></div>
+    </section>
+
+    <section id="interviews-panel" class="dashboard-panel">
+      <h2>Interviews</h2>
+      <div id="myInterviews" class="interviews-list"></div>
+      <div id="myBackgroundChecks" class="background-check-list"></div>
+    </section>
+
+    <section id="saved-jobs-panel" class="dashboard-panel">
+      <h2>Saved Jobs</h2>
+      <div id="savedJobs" class="saved-jobs-list"></div>
+    </section>
+
+    <section id="referrals-panel" class="dashboard-panel">
+      <h2>Referrals</h2>
+      <div class="panel-body">
+        <p class="p-muted">Refer friends and earn rewards.</p>
+        <form id="referralForm" class="dashboard-form">
+          <div class="form-group">
+            <label class="form-label" for="referralName">Friend name</label>
+            <input id="referralName" name="referralName" class="form-input" type="text" placeholder="Jane Doe" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="alertType">Job type</label>
-            <select id="alertType" name="alertType" class="form-input">
-              <option value="">Any job type</option>
-              <option value="Full-time">Full-time</option>
-              <option value="Part-time">Part-time</option>
-              <option value="Contract">Contract</option>
-              <option value="Freelance">Freelance</option>
-              <option value="Internship">Internship</option>
-              <option value="Shift">Shift</option>
-            </select>
+            <label class="form-label" for="referralEmail">Friend email</label>
+            <input id="referralEmail" name="referralEmail" class="form-input" type="email" placeholder="jane@example.com" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="alertFrequency">Frequency</label>
-            <select id="alertFrequency" name="alertFrequency" class="form-input">
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-            </select>
+            <label class="form-label" for="referralNote">Message</label>
+            <textarea id="referralNote" name="referralNote" class="form-input" rows="3" placeholder="Tell them why this is a great site"></textarea>
           </div>
           <div class="form-group form-actions">
-            <button class="btn btn-primary" type="submit">Create alert</button>
+            <button class="btn btn-primary" type="submit">Send referral</button>
           </div>
         </form>
+        <div id="referralsList" class="referrals-list"></div>
       </div>
+    </section>
+
+    <section id="job-alerts-panel" class="dashboard-panel">
+      <h2>Job Alerts</h2>
+      <form id="alertForm" class="dashboard-form">
+        <div class="form-group">
+          <label class="form-label" for="alertKeyword">Keyword</label>
+          <input id="alertKeyword" name="alertKeyword" class="form-input" type="text" placeholder="e.g. developer, remote" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="alertLocation">Location</label>
+          <input id="alertLocation" name="alertLocation" class="form-input" type="text" placeholder="City, state, or remote" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="alertCategory">Category</label>
+          <select id="alertCategory" name="alertCategory" class="form-input">
+            <option value="">Any category</option>
+            <option value="Engineering">Engineering</option>
+            <option value="Sales">Sales</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Operations">Operations</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div id="alertCategoryCustomWrap" class="form-group" style="display:none;">
+          <label class="form-label" for="alertCategoryCustom">Other category</label>
+          <input id="alertCategoryCustom" name="alertCategoryCustom" class="form-input" type="text" placeholder="Custom category" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="alertType">Job type</label>
+          <select id="alertType" name="alertType" class="form-input">
+            <option value="">Any job type</option>
+            <option value="Full-time">Full-time</option>
+            <option value="Part-time">Part-time</option>
+            <option value="Contract">Contract</option>
+            <option value="Freelance">Freelance</option>
+            <option value="Internship">Internship</option>
+            <option value="Shift">Shift</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="alertFrequency">Frequency</label>
+          <select id="alertFrequency" name="alertFrequency" class="form-input">
+            <option value="daily">Daily</option>
+            <option value="weekly">Weekly</option>
+          </select>
+        </div>
+        <div class="form-group form-actions">
+          <button class="btn btn-primary" type="submit">Create alert</button>
+        </div>
+      </form>
       <div id="alertsList" class="alert-list"></div>
+      <div id="shiftAlertRules" class="shift-alert-rules"></div>
     </section>
   </main>
 

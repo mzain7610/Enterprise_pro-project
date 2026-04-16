@@ -49,9 +49,12 @@ const applyCheckoutSessionEffects = (session) =>
     // Donation currently has no DB side-effects.
     if (mode === "donation") return resolve();
 
-    // For upgrade, mark job premium as soon as Stripe confirms payment.
-    if (mode === "upgrade" && Number.isInteger(jobId) && jobId > 0) {
-      db.query("UPDATE jobs SET is_premium = 1 WHERE id = ?", [jobId], (err) => {
+    // For upgrade or reboost, mark job premium as soon as Stripe confirms payment.
+    if ((mode === "upgrade" || mode === "reboost") && Number.isInteger(jobId) && jobId > 0) {
+      const sql = mode === "reboost"
+        ? "UPDATE jobs SET is_premium = 1, reboost_count = reboost_count + 1 WHERE id = ?"
+        : "UPDATE jobs SET is_premium = 1 WHERE id = ?";
+      db.query(sql, [jobId], (err) => {
         if (err) return reject(err);
         return resolve();
       });

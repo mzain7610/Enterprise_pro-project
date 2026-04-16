@@ -20,6 +20,17 @@ const getDefaultApiOrigin = () => {
 const apiOrigin = getDefaultApiOrigin();
 const API = `${apiOrigin}/api`;
 
+const handleAuthFailure = (res) => {
+  if ((res.status === 401 || res.status === 403) && typeof window !== "undefined") {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    if (!window.location.href.includes("login.html")) {
+      window.location.href = "login.html";
+    }
+  }
+  return res;
+};
+
 // eslint-disable-next-line no-var
 var authFetch = function(url, options = {}) {
   const token = localStorage.getItem("token");
@@ -35,6 +46,6 @@ var authFetch = function(url, options = {}) {
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {})
     }
-  });
+  }).then(handleAuthFailure);
 };
 window.authFetch = authFetch;

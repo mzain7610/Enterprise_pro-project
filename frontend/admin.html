@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/icons.css" />
   <link rel="stylesheet" href="css/global.css">
 </head>
 
@@ -30,7 +30,7 @@
       <a href="profile.html" class="nav-profile-chip" aria-label="Profile">
         <span class="nav-profile-avatar"><i class="fa-solid fa-user"></i></span>
       </a>
-      <button id="themeToggle" class="btn btn-ghost">&#127769;</button>
+      <button id="themeToggle" class="btn btn-ghost">🌙</button>
       <button id="logoutBtn" class="btn btn-outline">Logout</button>
   </nav>
 
@@ -230,49 +230,10 @@
     <section id="admin-reviews-section" class="glass-card admin-panel">
       <div class="admin-panel-head">
         <div>
-          <p class="eyebrow">Users</p>
-          <h3>Account management</h3>
-        </div>
-        <button class="btn btn-outline" type="button" onclick="loadUsers()">Reload Users</button>
-      </div>
-      <p class="p-muted">Promoting a user to admin requires approval code from test@sample.com.</p>
-      <div id="users" class="admin-list"></div>
-    </section>
-
-    <section class="glass-card admin-panel">
-      <div class="admin-panel-head">
-        <div>
-          <p class="eyebrow">Companies</p>
-          <h3>Registered companies</h3>
-        </div>
-        <button class="btn btn-outline" type="button" onclick="loadCompanies()">Reload</button>
-      </div>
-      <div id="companies" class="admin-list"></div>
-    </section>
-
-    <section class="glass-card admin-panel">
-      <div class="admin-panel-head">
-        <div>
-          <p class="eyebrow">Admin grants</p>
-          <h3>Grant history</h3>
-        </div>
-        <div class="admin-record-actions" style="gap:8px;">
-          <button class="btn btn-outline" type="button" onclick="setGrantHistoryFilter('all')">All</button>
-          <button class="btn btn-outline" type="button" onclick="setGrantHistoryFilter('pending')">Pending</button>
-          <button class="btn btn-outline" type="button" onclick="setGrantHistoryFilter('approved')">Approved</button>
-          <button class="btn btn-outline" type="button" onclick="setGrantHistoryFilter('expired')">Expired</button>
-        </div>
-      </div>
-      <div id="grantHistory" class="admin-list"></div>
-    </section>
-
-    <section class="glass-card admin-panel">
-      <div class="admin-panel-head">
-        <div>
           <p class="eyebrow">Reviews</p>
           <h3>Moderation queue</h3>
         </div>
-<div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+        <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
           <div class="admin-record-actions" style="gap:6px;">
             <button id="reviewSourcePortal" class="btn btn-ghost btn-sm" type="button" onclick="setReviewSourceFilter('portal')">Portal</button>
             <button id="reviewSourceCompany" class="btn btn-ghost btn-sm" type="button" onclick="setReviewSourceFilter('company')">Company</button>

@@ -540,6 +540,25 @@
               const persistData = await persistRes.json();
               console.warn("Photo URL persist failed:", persistData.message || "Unknown error");
             }
+
+            // Also update job_seeker_profiles table if user is a job seeker
+            if (user.role === "job_seeker" || user.is_admin) {
+              try {
+                const profilePersistRes = await authFetch(`${API}/users/job-seeker-profile`, {
+                  method: "PUT",
+                  body: JSON.stringify({
+                    photo_url: data.photo_url
+                  })
+                });
+
+                if (!profilePersistRes.ok) {
+                  const profilePersistData = await profilePersistRes.json();
+                  console.warn("Job seeker profile photo URL persist failed:", profilePersistData.message || "Unknown error");
+                }
+              } catch (profilePersistErr) {
+                console.warn("Job seeker profile photo URL persist error:", profilePersistErr.message);
+              }
+            }
           } catch (persistErr) {
             console.warn("Photo URL persist error:", persistErr.message);
           }

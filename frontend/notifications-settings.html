@@ -14,23 +14,23 @@
     }
 
     .settings-card {
-      background: white;
-      border: 1px solid #e0e0e0;
+      background: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 30px;
       margin-bottom: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-1);
     }
 
     .settings-card h2 {
-      color: #0066cc;
+      color: var(--brand);
       margin-top: 0;
       margin-bottom: 20px;
       font-size: 24px;
     }
 
     .settings-card h3 {
-      color: #333;
+      color: var(--text);
       font-size: 16px;
       margin: 20px 0 10px 0;
       font-weight: 600;
@@ -41,7 +41,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 12px 0;
-      border-bottom: 1px solid #f0f0f0;
+      border-bottom: 1px solid var(--border);
     }
 
     .setting-item:last-child {
@@ -64,20 +64,22 @@
 
     .setting-item select {
       padding: 8px 12px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       border-radius: 4px;
       font-size: 14px;
+      background: var(--surface);
+      color: var(--text);
     }
 
     .setting-description {
-      color: #666;
+      color: var(--muted);
       font-size: 14px;
       margin-left: 32px;
       margin-top: 4px;
     }
 
     .frequency-section {
-      background: #f9f9f9;
+      background: var(--surface-2);
       padding: 15px;
       border-radius: 4px;
       margin: 20px 0;
@@ -87,16 +89,18 @@
       display: block;
       margin-bottom: 12px;
       font-weight: 600;
-      color: #333;
+      color: var(--text);
     }
 
     .frequency-section select {
       width: 100%;
       max-width: 300px;
       padding: 10px;
-      border: 1px solid #ccc;
+      border: 1px solid var(--border);
       border-radius: 4px;
       font-size: 14px;
+      background: var(--surface);
+      color: var(--text);
     }
 
     .btn-group {
@@ -115,32 +119,32 @@
     }
 
     #notif-save-btn {
-      background: #0066cc;
+      background: var(--brand);
       color: white;
     }
 
     #notif-save-btn:hover {
-      background: #0052a3;
+      background: var(--accent);
     }
 
     .info-box {
-      background: #e3f2fd;
-      border-left: 4px solid #0066cc;
+      background: var(--accent-a-bg);
+      border-left: 4px solid var(--brand);
       padding: 15px;
       margin-bottom: 20px;
       border-radius: 4px;
-      color: #0066cc;
+      color: var(--accent-a-text);
       font-size: 14px;
     }
 
     .breadcrumb {
       margin-bottom: 20px;
       font-size: 14px;
-      color: #666;
+      color: var(--muted);
     }
 
     .breadcrumb a {
-      color: #0066cc;
+      color: var(--brand);
       text-decoration: none;
     }
 

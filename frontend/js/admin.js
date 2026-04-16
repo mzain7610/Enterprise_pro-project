@@ -1015,6 +1015,13 @@
     });
   }
 
+  function closeJobHistoryModal() {
+    const modal = document.getElementById("jobHistoryModal");
+    if (modal) {
+      modal.style.display = "none";
+    }
+  }
+
   window.loadJobs = loadJobs;
   window.approveJob = approveJob;
   window.deleteJob = deleteJob;
@@ -1036,6 +1043,7 @@
   window.refundShift = refundShift;
   window.releaseShift = releaseShift;
   window.resendShiftAlerts = resendShiftAlerts;
+  window.closeJobHistoryModal = closeJobHistoryModal;
   window.loadUsers = loadUsers;
   window.toggleUserBlock = toggleUserBlock;
   window.deleteUserAccount = deleteUserAccount;

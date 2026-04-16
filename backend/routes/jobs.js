@@ -78,6 +78,7 @@ router.get("/portal-stats", optionalAuth, jobsController.getPortalStats);
 /* GET all jobs */
 router.get("/", optionalAuth, jobsController.getJobs);
 router.get("/:id", optionalAuth, jobsController.getJobById);
+router.get("/:id/check-application", auth, applicationsController.checkApplicationStatus);
 
 /* ADD job */
 router.post("/", auth, employerOnly, uploadJobImage.single("job_image"), jobsController.addJob);

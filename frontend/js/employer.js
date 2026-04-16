@@ -245,6 +245,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.history.replaceState({}, document.title, "employer.html");
   }
 
+  if (paymentStatus === "cancel" && mode === "reboost") {
+    showError("Premium reboost payment was canceled.");
+    window.history.replaceState({}, document.title, "employer.html");
+  }
+
   const renderSelectedJobMeta = () => {
     if (!selectedJobMeta) return;
     const jobId = jobSelect?.value;

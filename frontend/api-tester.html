@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Tester</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .output { border: 1px solid #ccc; padding: 10px; margin-top: 10px; max-height: 400px; overflow-y: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>API Test</h1>
+    <button onclick="testHealth()">Test Health</button>
+    <button onclick="testSeed()">Seed Demo Data</button>
+    <button onclick="testJobs()">Test Jobs API</button>
+    
+    <div class="output" id="output"></div>
+
+    <script>
+        const output = document.getElementById('output');
+
+        async function testHealth() {
+            output.innerHTML = '';
+            try {
+                const response = await fetch('/api/health');
+                const data = await response.json();
+                output.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (err) {
+                output.innerHTML = '<p style="color:red;">Error: ' + err.message + '</p>';
+            }
+        }
+
+        async function testSeed() {
+            output.innerHTML = '<p>Seeding...</p>';
+            try {
+                const response = await fetch('/api/admin/seed-demo', { method: 'POST' });
+                const data = await response.json();
+                output.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (err) {
+                output.innerHTML = '<p style="color:red;">Error: ' + err.message + '</p>';
+            }
+        }
+
+        async function testJobs() {
+            output.innerHTML = '<p>Loading jobs...</p>';
+            try {
+                const response = await fetch('/api/jobs');
+                const data = await response.json();
+                output.innerHTML = '<p>Approved jobs count: ' + (Array.isArray(data) ? data.length : 0) + '</p><pre>' + JSON.stringify(data.slice(0, 2), null, 2) + '</pre>';
+            } catch (err) {
+                output.innerHTML = '<p style="color:red;">Error: ' + err.message + '</p>';
+            }
+        }
+
+        // Test on load
+        window.addEventListener('load', () => {
+            testHealth();
+            setTimeout(testSeed, 1000);
+        });
+    </script>
+</body>
+</html>

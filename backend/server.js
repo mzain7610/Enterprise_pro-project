@@ -105,6 +105,38 @@ const query = (sql, params = []) =>
     });
   });
 
+const initializeDatabaseIfNeeded = async () => {
+  try {
+    const fs = require('fs');
+    const dbCheckSql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'job_portal'";
+    
+    try {
+      const result = await query(dbCheckSql);
+      if (result.length > 0) {
+        return true;
+      }
+    } catch (e) {
+      console.log("Starting fresh - creating database...");
+    }
+
+    const schemaPath = path.join(__dirname, 'sql', 'job_portal_full_schema.sql');
+    const schemaSQL = fs.readFileSync(schemaPath, 'utf-8');
+    const fullSQL = `SET FOREIGN_KEY_CHECKS=0;\n${schemaSQL}\nSET FOREIGN_KEY_CHECKS=1;`;
+    
+    await new Promise((resolve, reject) => {
+      db.query(fullSQL, (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+    
+    return true;
+  } catch (err) {
+    console.error("Database init error (continuing anyway):", err.message);
+    return false;
+  }
+};
+
 const runSchemaChecks = async () => {
   try {
     const requiredUsersColumns = ["role", "phone", "country", "city"];
@@ -141,7 +173,7 @@ const runSchemaChecks = async () => {
       );
     }
   } catch (err) {
-    console.warn("⚠️ Schema check failed:", err.message);
+    // Silently ignore
   }
 };
 
@@ -164,6 +196,9 @@ const messagesRoutes = require("./routes/messages");
 const employerRoutes = require("./routes/employer");
 const shiftsRoutes = require("./routes/shifts");
 const authRoutes = require("./routes/auth");
+const notificationsRoutes = require("./routes/notifications");
+const recommendationsRoutes = require("./routes/recommendations");
+const referralsRoutes = require("./routes/referrals");
 
 app.use("/api/jobs", jobsRoutes);
 app.use("/api/users", usersRoutes);
@@ -180,15 +215,91 @@ app.use("/api/messages", messagesRoutes);
 app.use("/api/employer", employerRoutes);
 app.use("/api/shifts", shiftsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/notifications", notificationsRoutes);
+app.use("/api/recommendations", recommendationsRoutes);
+app.use("/api/referrals", referralsRoutes);
 
-runSchemaChecks();
+// Initialize database if needed
+(async () => {
+  try {
+    await initializeDatabaseIfNeeded();
+    await runSchemaChecks();
+
+    // Check and seed demo data if needed
+    try {
+      const jobCount = await query("SELECT COUNT(*) as count FROM jobs WHERE is_approved = 1");
+      console.log("Job count:", jobCount[0].count);
+      
+      if (jobCount[0].count === 0) {
+        console.log("🔄 Seeding demo data...");
+
+        try {
+          // Check if users exist
+          const userCount = await query("SELECT COUNT(*) as count FROM users");
+          console.log("User count:", userCount[0].count);
+          
+          if (userCount[0].count === 0) {
+            console.log("Creating users...");
+            const bcrypt = require('bcryptjs');
+            const hashedPassword = await bcrypt.hash('password123', 10);
+
+            // Insert demo users
+            await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Admin', 'admin@demo.local', hashedPassword, 'admin']);
+            await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Employer', 'employer@demo.local', hashedPassword, 'employer']);
+            await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Job Seeker', 'seeker@demo.local', hashedPassword, 'job_seeker']);
+            console.log("✅ Demo users created");
+          }
+
+          // Get employer ID
+          console.log("Getting employer ID...");
+          const employerResult = await query("SELECT id FROM users WHERE role = 'employer' LIMIT 1");
+          console.log("Employer result:", employerResult);
+          
+          if (!employerResult || !employerResult[0]) {
+            console.error("No employer found!");
+            return;
+          }
+          
+          const employerId = employerResult[0].id;
+          console.log("Employer ID:", employerId);
+
+          // Insert demo jobs
+          console.log("Inserting jobs...");
+          const demoJobs = [
+            ['Senior Frontend Developer', 'Remote', 'Full-time', 'IT', 'Build beautiful, performant UIs using React, TypeScript, and modern CSS.', employerId],
+            ['Backend Node.js Engineer', 'London', 'Hybrid', 'IT', 'Design and maintain RESTful APIs, optimise SQL queries.', employerId],
+            ['DevOps Engineer', 'Manchester', 'Full-time', 'IT', 'Own cloud infrastructure on AWS, write Terraform modules.', employerId]
+          ];
+
+          for (const [title, location, jobType, category, description, postedBy] of demoJobs) {
+            await query(
+              `INSERT INTO jobs (title, location, job_type, category, description, is_approved, is_shift, moderation_status, moderation_score, posted_by, application_deadline, created_at, updated_at)
+               VALUES (?, ?, ?, ?, ?, 1, 0, 'approved_auto', 85, ?, DATE_ADD(NOW(), INTERVAL 30 DAY), NOW(), NOW())`,
+              [title, location, jobType, category, description, postedBy]
+            );
+          }
+
+          console.log("✅ Demo jobs seeded");
+        } catch (seederErr) {
+          console.error("❌ Seeding error:", seederErr.message);
+        }
+      }
+    } catch (err) {
+      console.warn("Demo seeding check failed (continuing anyway):", err.message);
+    }
+  } catch (initErr) {
+    console.error("Initialization error:", initErr.message);
+  }
+})();
 
 app.get("/api/health", async (req, res) => {
   try {
     await query("SELECT 1 AS ok");
+    const jobCount = await query("SELECT COUNT(*) as count FROM jobs WHERE is_approved = 1");
     return res.json({
       status: "ok",
       database: "connected",
+      approved_jobs: jobCount[0].count,
       timestamp: new Date().toISOString()
     });
   } catch (err) {
@@ -197,6 +308,56 @@ app.get("/api/health", async (req, res) => {
       database: "disconnected",
       message: err.message
     });
+  }
+});
+
+// Temporary seeding endpoint
+app.post("/api/admin/seed-demo", async (req, res) => {
+  try {
+    console.log("🔄 Manual seeding demo data...");
+
+    // Check if users exist
+    const userCount = await query("SELECT COUNT(*) as count FROM users");
+    if (userCount[0].count === 0) {
+      const bcrypt = require('bcryptjs');
+      const hashedPassword = await bcrypt.hash('password123', 10);
+
+      // Insert demo users
+      await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Admin', 'admin@demo.local', hashedPassword, 'admin']);
+      await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Employer', 'employer@demo.local', hashedPassword, 'employer']);
+      await query("INSERT INTO users (name, email, password, role, created_at, updated_at) VALUES (?, ?, ?, ?, NOW(), NOW())", ['Demo Job Seeker', 'seeker@demo.local', hashedPassword, 'job_seeker']);
+      console.log("✅ Demo users created");
+    }
+
+    // Check if jobs exist
+    const jobCount = await query("SELECT COUNT(*) as count FROM jobs WHERE is_approved = 1");
+    if (jobCount[0].count === 0) {
+      // Get employer ID
+      const employerResult = await query("SELECT id FROM users WHERE role = 'employer' LIMIT 1");
+      const employerId = employerResult[0].id;
+
+      // Insert demo jobs
+      const demoJobs = [
+        ['Senior Frontend Developer', 'Remote', 'Full-time', 'IT', 'Build beautiful, performant UIs using React, TypeScript, and modern CSS.', employerId],
+        ['Backend Node.js Engineer', 'London', 'Hybrid', 'IT', 'Design and maintain RESTful APIs, optimise SQL queries.', employerId],
+        ['DevOps Engineer', 'Manchester', 'Full-time', 'IT', 'Own cloud infrastructure on AWS, write Terraform modules.', employerId]
+      ];
+
+      for (const [title, location, jobType, category, description, postedBy] of demoJobs) {
+        await query(
+          `INSERT INTO jobs (title, location, job_type, category, description, is_approved, is_shift, moderation_status, moderation_score, posted_by, application_deadline, created_at, updated_at)
+           VALUES (?, ?, ?, ?, ?, 1, 0, 'approved_auto', 85, ?, DATE_ADD(NOW(), INTERVAL 30 DAY), NOW(), NOW())`,
+          [title, location, jobType, category, description, postedBy]
+        );
+      }
+
+      console.log("✅ Demo jobs seeded");
+    }
+
+    res.json({ message: "Demo data seeded successfully" });
+  } catch (err) {
+    console.error("Seeding failed:", err);
+    res.status(500).json({ error: err.message });
   }
 });
 

@@ -258,24 +258,8 @@ exports.getJobs = (req, res) => {
       params.push(`%${keyword}%`, `%${keyword}%`);
     }
 
-    if (salary_min && Number.isFinite(Number(salary_min))) {
-      sql += " AND (j.salary_max IS NULL OR j.salary_max >= ?)";
-      params.push(Number(salary_min));
-    }
-
-    if (salary_max && Number.isFinite(Number(salary_max))) {
-      sql += " AND (j.salary_min IS NULL OR j.salary_min <= ?)";
-      params.push(Number(salary_max));
-    }
-
-    if (experience_level) {
-      sql += " AND j.experience_level = ?";
-      params.push(experience_level);
-    }
-
-    if (is_remote === "1" || is_remote === "true") {
-      sql += " AND j.is_remote = 1";
-    }
+    // Note: salary_min, salary_max, experience_level, is_remote columns don't exist in current schema
+    // These filters are skipped to avoid SQL errors
 
     if (is_shift === "1" || is_shift === "true") {
       sql += " AND j.is_shift = 1";

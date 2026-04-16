@@ -1,15 +1,3 @@
--- JOB ACTION LOGS TABLE (for audit trail)
-CREATE TABLE IF NOT EXISTS job_action_logs (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  job_id INT NOT NULL,
-  user_id INT NOT NULL,
-  user_role ENUM('admin','employer') NOT NULL,
-  action VARCHAR(40) NOT NULL,
-  details TEXT NULL,
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
 -- Job Portal canonical schema (MySQL 8+)
 -- Aligned with specification: Job Seeker, Employer, Administrator
 -- Safe to run on a fresh database.
@@ -32,6 +20,24 @@ CREATE TABLE IF NOT EXISTS users (
   is_blocked TINYINT(1) NOT NULL DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- ADMIN ROLE GRANTS TABLE
+CREATE TABLE IF NOT EXISTS admin_role_grants (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  target_user_id INT NOT NULL,
+  requested_by_admin_id INT NOT NULL,
+  approver_email VARCHAR(255) NOT NULL,
+  approval_code VARCHAR(10) NOT NULL,
+  status ENUM('pending', 'approved', 'expired', 'rejected') NOT NULL DEFAULT 'pending',
+  expires_at DATETIME NOT NULL,
+  approved_at DATETIME NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_target_user (target_user_id),
+  INDEX idx_status (status),
+  UNIQUE KEY uniq_pending_grant (target_user_id, status),
+  FOREIGN KEY (target_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (requested_by_admin_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 -- COMPANIES TABLE
@@ -195,6 +201,25 @@ CREATE TABLE IF NOT EXISTS reviews (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- COMPANY REVIEWS TABLE
+CREATE TABLE IF NOT EXISTS company_reviews (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  company_id INT NOT NULL,
+  employer_user_id INT NULL,
+  job_id INT NULL,
+  reviewer_name VARCHAR(120) NOT NULL,
+  reviewer_role VARCHAR(120) NOT NULL,
+  reviewer_email VARCHAR(255) NULL,
+  rating TINYINT NOT NULL,
+  message VARCHAR(600) NOT NULL,
+  approved TINYINT NOT NULL DEFAULT 0,
+  is_hidden TINYINT(1) NOT NULL DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  INDEX idx_company_reviews_company (company_id),
+  FOREIGN KEY (company_id) REFERENCES companies(id) ON DELETE CASCADE,
+  FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE SET NULL
+);
+
 -- JOB SEEKER PROFILES TABLE
 CREATE TABLE IF NOT EXISTS job_seeker_profiles (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -310,4 +335,104 @@ CREATE TABLE IF NOT EXISTS email_verifications (
   UNIQUE KEY uniq_email_verification_token (token_hash),
   INDEX idx_email_verifications_user (user_id),
   CONSTRAINT fk_email_verification_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- JOB ACTION LOGS TABLE (for audit trail)
+CREATE TABLE IF NOT EXISTS job_action_logs (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  job_id INT NOT NULL,
+  user_id INT NOT NULL,
+  user_role ENUM('admin','employer') NOT NULL,
+  action VARCHAR(40) NOT NULL,
+  details TEXT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (job_id) REFERENCES jobs(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- SKILLS SYSTEM TABLES
+CREATE TABLE IF NOT EXISTS skills (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(80) NOT NULL,
+  name_normalized VARCHAR(80) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_skills_normalized (name_normalized)
+);
+
+CREATE TABLE IF NOT EXISTS user_skills (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  skill_id INT NOT NULL,
+  source ENUM('self', 'resume', 'admin') DEFAULT 'self',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_user_skill (user_id, skill_id),
+  KEY idx_user_skills_user (user_id),
+  KEY idx_user_skills_skill (skill_id),
+  CONSTRAINT fk_user_skills_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_user_skills_skill FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS skill_endorsements (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  skill_id INT NOT NULL,
+  endorsed_user_id INT NOT NULL,
+  endorsed_by_user_id INT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uq_skill_endorsement (skill_id, endorsed_user_id, endorsed_by_user_id),
+  KEY idx_skill_endorsements_target (endorsed_user_id, skill_id),
+  KEY idx_skill_endorsements_actor (endorsed_by_user_id),
+  CONSTRAINT fk_skill_endorsements_skill FOREIGN KEY (skill_id) REFERENCES skills(id) ON DELETE CASCADE,
+  CONSTRAINT fk_skill_endorsements_target FOREIGN KEY (endorsed_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_skill_endorsements_actor FOREIGN KEY (endorsed_by_user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- EMAIL NOTIFICATIONS TABLES
+CREATE TABLE IF NOT EXISTS user_notification_preferences (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL UNIQUE,
+  job_alert_emails BOOLEAN DEFAULT TRUE,
+  application_update_emails BOOLEAN DEFAULT TRUE,
+  support_reply_emails BOOLEAN DEFAULT TRUE,
+  saved_job_update_emails BOOLEAN DEFAULT TRUE,
+  promotional_emails BOOLEAN DEFAULT FALSE,
+  email_frequency ENUM('immediate', 'daily', 'weekly') DEFAULT 'immediate',
+  unsubscribed_from_all BOOLEAN DEFAULT FALSE,
+  unsubscribe_token VARCHAR(64) UNIQUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  INDEX idx_user_id (user_id)
+);
+
+CREATE TABLE IF NOT EXISTS email_notifications (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT NOT NULL,
+  recipient_email VARCHAR(255) NOT NULL,
+  email_type ENUM(
+    'job_alert_match',
+    'application_status_update',
+    'application_received',
+    'application_reviewed',
+    'application_accepted',
+    'application_rejected',
+    'support_reply',
+    'saved_job_updated',
+    'saved_job_reposted',
+    'saved_job_price_change',
+    'job_expiring_soon',
+    'referral_notification',
+    'interview_invitation',
+    'password_reset',
+    'email_verification'
+  ) NOT NULL,
+  subject VARCHAR(255) NOT NULL,
+  template_name VARCHAR(100) NOT NULL,
+  template_data JSON,
+  sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  status ENUM('sent', 'failed', 'bounced', 'complained') DEFAULT 'sent',
+  retry_count INT DEFAULT 0,
+  error_message TEXT,
+  INDEX idx_user_id (user_id),
+  INDEX idx_status (status),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

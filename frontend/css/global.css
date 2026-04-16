@@ -1,4 +1,4 @@
-/* ===============================
+﻿/* ===============================
    GLOBAL DESIGN SYSTEM
    =============================== */
 @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Sora:wght@400;500;600;700&display=swap");
@@ -113,7 +113,7 @@ body {
 }
 
 body.dark {
-  /* ── Dark Mode Design System v2 (SaaS / Professional) ── */
+  /* â”€â”€ Dark Mode Design System v2 (SaaS / Professional) â”€â”€ */
   --bg: #0f172a;
   --bg-soft: #111827;
   --surface: #1f2937;
@@ -554,7 +554,7 @@ body.dark .nav-bell-icon {
   margin-right: 10px !important;
 }
 
-:is(.home-page, .jobs-page, .dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .post-job-page, .registration-page) .nav-left {
+:is(.home-page, .jobs-page, .dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .post-job-page, .registration-page, .admin-page) .nav-left {
   margin-right: 10px !important;
 }
 
@@ -725,7 +725,7 @@ body.dark .nav-bell-icon {
 }
 
 .palette-option.is-active::after {
-  content: "✓";
+  content: "âœ“";
   margin-left: auto;
   font-size: 12px;
   font-weight: 700;
@@ -767,7 +767,7 @@ body.dark .nav-bell-icon {
 }
 
 .active-mode-option.is-active::after {
-  content: "✓";
+  content: "âœ“";
   margin-left: auto;
   font-size: 12px;
   font-weight: 700;
@@ -1669,6 +1669,12 @@ body.dark .dashboard-page .referral-stat-card {
 .badge-premium {
   background: linear-gradient(135deg, #facc15, #f59e0b);
   color: #1f2937;
+}
+
+.badge-pending {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
 }
 
 /* ===============================
@@ -3689,7 +3695,7 @@ body.job-detail-page {
    DASHBOARD / PROFILE / COMPANY CONSISTENCY
    =============================== */
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) {
   font-family: "Poppins", "Sora", system-ui, -apple-system, sans-serif;
   background:
     radial-gradient(circle at 0% 0%, rgba(59, 130, 246, 0.11), transparent 36%),
@@ -3697,7 +3703,7 @@ body.job-detail-page {
     linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .navbar {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .navbar {
   max-width: 1160px;
   width: min(100%, 1160px);
   margin: 10px auto 0;
@@ -3724,14 +3730,14 @@ body.job-detail-page {
   z-index: 10;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .logo {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .logo {
   display: inline-flex;
   align-items: center;
   gap: 8px;
   font-size: 22px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .logo i {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .logo i {
   width: 34px;
   height: 34px;
   display: inline-flex;
@@ -3743,7 +3749,7 @@ body.job-detail-page {
   font-size: 14px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link {
   position: relative;
   padding: 7px 10px;
   border-radius: 9px;
@@ -3753,7 +3759,7 @@ body.job-detail-page {
   white-space: nowrap;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link::after {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link::after {
   content: "";
   position: absolute;
   left: 10px;
@@ -3767,24 +3773,24 @@ body.job-detail-page {
   transition: transform 0.24s ease;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link:hover,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link.nav-active {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link:hover,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link.nav-active {
   color: #0f172a;
   background: rgba(226, 232, 240, 0.65);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link:hover::after,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-link.nav-active::after {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link:hover::after,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-link.nav-active::after {
   transform: scaleX(1);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-profile-chip {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-profile-chip {
   margin-left: auto;
   padding: 0;
   border-radius: 999px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .nav-profile-avatar {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .nav-profile-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -3796,41 +3802,41 @@ body.job-detail-page {
   border: 1px solid rgba(37, 99, 235, 0.26);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .container {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .container {
   max-width: 1160px;
   margin: 0 auto;
   padding: 24px 22px 70px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .hero,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .glass-card,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .glass {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .hero,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .glass-card,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .glass {
   background: #ffffff;
   border: 1px solid rgba(148, 163, 184, 0.24);
   border-radius: 14px;
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .hero {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .hero {
   padding: 30px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .hero-title {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .hero-title {
   font-size: clamp(30px, 5vw, 42px);
   margin-bottom: 10px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .section-block {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .section-block {
   margin-top: 34px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .quick-actions {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .quick-actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .action-card {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .action-card {
   background: #ffffff;
   border: 1px solid rgba(148, 163, 184, 0.24);
   border-radius: 12px;
@@ -3842,17 +3848,17 @@ body.job-detail-page {
   transition: transform 0.24s ease, box-shadow 0.24s ease;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .action-card:hover {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .action-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 24px rgba(15, 23, 42, 0.12);
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .action-arrow {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .action-arrow {
   color: #2563eb;
   font-weight: 700;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .filters-card {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .filters-card {
   background: #ffffff;
   border: 1px solid rgba(148, 163, 184, 0.24);
   border-radius: 12px;
@@ -3860,20 +3866,20 @@ body.job-detail-page {
   padding: 16px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .filters {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .filters {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 14px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .form-input,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .filter-input {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .form-input,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .filter-input {
   border-radius: 10px;
 }
 
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .menu-card,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .feature-card,
-:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .stat-card {
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .menu-card,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .feature-card,
+:is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .stat-card {
   border-radius: 12px;
   border: 1px solid rgba(148, 163, 184, 0.22);
   box-shadow: 0 8px 18px rgba(15, 23, 42, 0.07);
@@ -3881,11 +3887,11 @@ body.job-detail-page {
 }
 
 @media (max-width: 980px) {
-  :is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .quick-actions {
+  :is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .quick-actions {
     grid-template-columns: 1fr;
   }
 
-  :is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page) .container {
+  :is(.dashboard-page, .profile-page, .company-page, .employer-page, .resume-page, .menu-page, .about-page, .admin-page) .container {
     padding: 20px 14px 50px;
   }
 }
@@ -4148,8 +4154,29 @@ body {
 }
 
 .logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   font-size: 22px;
   letter-spacing: -0.02em;
+  font-weight: 700;
+  color: var(--text);
+  text-decoration: none;
+  font-family: "Poppins", "Sora", system-ui, -apple-system, sans-serif;
+}
+
+.logo-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--pro-brand), var(--pro-brand-2));
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .logo i {
@@ -4250,20 +4277,20 @@ body {
 }
 
 .btn-outline {
-  border: 1px solid rgba(15, 23, 42, 0.16);
-  color: #1f2937;
-  background: #ffffff;
+  border: 1px solid var(--border);
+  color: var(--text);
+  background: var(--surface);
 }
 
 .btn-outline:hover {
-  border-color: rgba(29, 78, 216, 0.45);
-  color: var(--pro-brand);
+  border-color: var(--brand);
+  color: var(--brand);
 }
 
 .btn-ghost {
-  background: #eff6ff;
-  border: 1px solid #dbeafe;
-  color: #1e3a8a;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  color: var(--text);
 }
 
 .form-input,
@@ -4275,9 +4302,9 @@ textarea,
 .job-search-form select,
 .nav-menu-search {
   border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  background: #ffffff;
-  color: var(--pro-text);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
 }
 
 input:focus,
@@ -4287,8 +4314,8 @@ textarea:focus,
 .filter-input:focus,
 .nav-menu-search:focus {
   outline: none;
-  border-color: rgba(29, 78, 216, 0.5);
-  box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--accent-a-bg);
 }
 
 .badge,
@@ -5849,7 +5876,7 @@ body.admin-page {
 }
 
 .warning-list li::before {
-  content: "•";
+  content: "â€¢";
   color: #ef4444;
   font-weight: bold;
   font-size: 18px;
@@ -6945,14 +6972,14 @@ body.dark .job-alert-card {
 }
 
 /* ================================================
-   DARK MODE REDESIGN v2 — Professional SaaS Theme
+   DARK MODE REDESIGN v2 â€” Professional SaaS Theme
    Accent: #6366f1 (indigo) | Hover: #4f46e5
    Surface: #1f2937 | Background: #0f172a
    Text: #f9fafb | Muted: #9ca3af
    Borders: rgba(255,255,255,0.08)
    ================================================ */
 
-/* ── Smooth transitions on all interactive elements ── */
+/* â”€â”€ Smooth transitions on all interactive elements â”€â”€ */
 body.dark *,
 body.dark *::before,
 body.dark *::after {
@@ -6960,7 +6987,7 @@ body.dark *::after {
               color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
 }
 
-/* ── Navbar ── */
+/* â”€â”€ Navbar â”€â”€ */
 body.dark .navbar {
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
@@ -6975,7 +7002,7 @@ body.dark .navbar a:not(.logo):not(.nav-profile-chip):hover {
   background: rgba(255, 255, 255, 0.06) !important;
 }
 
-/* Active nav item — indigo highlight */
+/* Active nav item â€” indigo highlight */
 body.dark .navbar a.nav-active:not(.nav-profile-chip):not(.logo) {
   color: #ffffff !important;
   background: #6366f1 !important;
@@ -7040,7 +7067,7 @@ body.dark .nav-menu-close {
   color: #9ca3af !important;
 }
 
-/* ── Card hover unified ── */
+/* â”€â”€ Card hover unified â”€â”€ */
 body.dark .job-card:hover,
 body.dark .menu-card:hover,
 body.dark .feature-card:hover,
@@ -7073,7 +7100,7 @@ body.dark .modal-body {
   border-color: rgba(255, 255, 255, 0.07) !important;
 }
 
-/* ── Typography ── */
+/* â”€â”€ Typography â”€â”€ */
 body.dark .settings-card-header h3,
 body.dark .admin-page .admin-stat-value,
 body.dark .dashboard-page .app-card__header h3,
@@ -7106,7 +7133,7 @@ body.dark .company-link:hover {
   color: #a5b4fc !important;
 }
 
-/* ── Primary / Apply / Registration buttons ── */
+/* â”€â”€ Primary / Apply / Registration buttons â”€â”€ */
 body.dark .btn-primary,
 body.dark .registration-btn {
   background: linear-gradient(135deg, #6366f1, #4f46e5) !important;
@@ -7133,7 +7160,7 @@ body.dark .apply-btn:hover {
   transform: translateY(-2px);
 }
 
-/* ── Job cards (home + jobs page hardcoded overrides) ── */
+/* â”€â”€ Job cards (home + jobs page hardcoded overrides) â”€â”€ */
 body.dark .home-page .job-card,
 body.dark .jobs-page .job-card {
   background: #1f2937 !important;
@@ -7175,7 +7202,7 @@ body.dark .job-detail-page .job-info-list span {
   color: #d1d5db !important;
 }
 
-/* Work type toggle buttons – dark mode */
+/* Work type toggle buttons â€“ dark mode */
 body.dark .work-type-btn {
   background: #1e293b;
   border-color: #334155;
@@ -7205,7 +7232,7 @@ body.dark .job-detail-page .job-tag {
   border-color: rgba(99, 102, 241, 0.24) !important;
 }
 
-/* ── Jobs page search & results ── */
+/* â”€â”€ Jobs page search & results â”€â”€ */
 body.dark .jobs-page .jobs-results-bar {
   background: #1f2937 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -7230,7 +7257,7 @@ body.dark .jobs-page .salary-kpi-value,
 body.dark .jobs-page .salary-list-block li {
   color: #e2e8f0 !important;
 }
-/* ── Dashboard ── */
+/* â”€â”€ Dashboard â”€â”€ */
 body.dark .dashboard-page .dashboard-tabs {
   background: #111827 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -7243,7 +7270,7 @@ body.dark .dashboard-page .dashboard-tab.is-active {
   box-shadow: none !important;
 }
 
-/* Status pills — accessible contrast in dark */
+/* Status pills â€” accessible contrast in dark */
 body.dark .dashboard-page .status-pending {
   background: rgba(251, 191, 36, 0.14) !important;
   color: #fde68a !important;
@@ -7275,7 +7302,7 @@ body.dark .dashboard-page .dashboard-hero .glass-card {
   background: #1f2937 !important;
 }
 
-/* ── Admin page ── */
+/* â”€â”€ Admin page â”€â”€ */
 body.dark .admin-page .admin-header-icon {
   background: linear-gradient(135deg, #7c3aed, #4f46e5) !important;
   box-shadow: 0 10px 22px rgba(99, 102, 241, 0.35) !important;
@@ -7289,7 +7316,7 @@ body.dark .stat-green { background: rgba(16, 185, 129, 0.10) !important; border:
 body.dark .stat-purple{ background: rgba(139, 92, 246, 0.10) !important; border: 1px solid rgba(139, 92, 246, 0.18) !important; }
 body.dark .stat-orange{ background: rgba(249, 115, 22, 0.10) !important; border: 1px solid rgba(249, 115, 22, 0.18) !important; }
 
-/* ── Profile / Company / Employer tabs ── */
+/* â”€â”€ Profile / Company / Employer tabs â”€â”€ */
 body.dark .profile-page .profile-tabs,
 body.dark .employer-page .employer-tabs,
 body.dark .company-page .company-tabs {
@@ -7322,7 +7349,7 @@ body.dark .employer-page .pipeline-toolbar {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* ── Tabs (menu / about / resume / auth) ── */
+/* â”€â”€ Tabs (menu / about / resume / auth) â”€â”€ */
 body.dark .menu-tab,
 body.dark .about-tab,
 body.dark .resume-tab,
@@ -7348,7 +7375,7 @@ body.dark .auth-tab.is-active {
   background: rgba(99, 102, 241, 0.16) !important;
 }
 
-/* ── Messages ── */
+/* â”€â”€ Messages â”€â”€ */
 body.dark .message-panel,
 body.dark .message-card {
   background: #1f2937 !important;
@@ -7356,7 +7383,7 @@ body.dark .message-card {
 }
 body.dark .message-meta { color: #6b7280 !important; }
 
-/* ── Support chat ── */
+/* â”€â”€ Support chat â”€â”€ */
 body.dark .support-panel {
   background: #1f2937 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -7370,7 +7397,7 @@ body.dark .support-bubble.user {
   background: rgba(99, 102, 241, 0.18) !important;
 }
 
-/* ── Post-job card (hardcoded white) ── */
+/* â”€â”€ Post-job card (hardcoded white) â”€â”€ */
 body.dark .post-job-card {
   background: #1f2937 !important;
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.50) !important;
@@ -7390,14 +7417,14 @@ body.dark .post-job-page .post-form-section {
 }
 body.dark .post-job-page .post-form-section-head h3 { color: #f9fafb !important; }
 
-/* ── Resume text area ── */
+/* â”€â”€ Resume text area â”€â”€ */
 body.dark .resume-text {
   background: #111827 !important;
   border-color: rgba(255, 255, 255, 0.07) !important;
   color: #e5e7eb !important;
 }
 
-/* ── Modals ── */
+/* â”€â”€ Modals â”€â”€ */
 body.dark .modal-content,
 body.dark .account-modal .modal-content {
   background: #1f2937 !important;
@@ -7417,7 +7444,7 @@ body.dark .warning-list {
 }
 body.dark .warning-list li { color: #fca5a5 !important; }
 
-/* ── Apply page ── */
+/* â”€â”€ Apply page â”€â”€ */
 body.dark .apply-benefits-list li { color: #e5e7eb !important; }
 body.dark .apply-benefits-list i { color: #34d399 !important; }
 body.dark .form-section-title {
@@ -7440,7 +7467,7 @@ body.dark .file-upload-content p,
 body.dark .file-upload-text { color: #d1d5db !important; }
 body.dark .file-upload-content i { color: #818cf8 !important; }
 
-/* ── Hero stats strip ── */
+/* â”€â”€ Hero stats strip â”€â”€ */
 body.dark .hero-stats-strip {
   background: rgba(31, 41, 55, 0.80) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -7453,7 +7480,7 @@ body.dark .hero-stat-item i {
   border-color: rgba(99, 102, 241, 0.24) !important;
 }
 
-/* ── Homepage hero pro ── */
+/* â”€â”€ Homepage hero pro â”€â”€ */
 body.dark .home-page .hero-pro {
   background: linear-gradient(135deg, #1f2937 0%, #192030 100%) !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
@@ -7503,3 +7530,4 @@ body:not(.dark) .home-page .hero-live-pill #heroActiveCount,
 body:not(.dark) .home-page .hero-live-pill i {
   color: #000000 !important;
 }
+

@@ -44,6 +44,7 @@ const ensureCompanyReviewsSchema = () => {
       user_id INT NULL,
       reviewer_name VARCHAR(120),
       reviewer_role VARCHAR(120) NULL,
+      job_id INT NULL,
       rating TINYINT NOT NULL,
       message TEXT,
       approved TINYINT(1) DEFAULT 0,
@@ -62,6 +63,7 @@ const ensureCompanyReviewsSchema = () => {
       ensureCompanyReviewColumn("reviewer_role", "ALTER TABLE company_reviews ADD COLUMN reviewer_role VARCHAR(120) NULL");
       ensureCompanyReviewColumn("approved", "ALTER TABLE company_reviews ADD COLUMN approved TINYINT(1) DEFAULT 0");
       ensureCompanyReviewColumn("is_hidden", "ALTER TABLE company_reviews ADD COLUMN is_hidden TINYINT(1) DEFAULT 0");
+      ensureCompanyReviewColumn("job_id", "ALTER TABLE company_reviews ADD COLUMN job_id INT NULL");
       ensureCompanyReviewIndex("idx_company_reviews_company", "ALTER TABLE company_reviews ADD INDEX idx_company_reviews_company (company_id)");
       ensureCompanyReviewIndex("idx_company_reviews_status", "ALTER TABLE company_reviews ADD INDEX idx_company_reviews_status (approved, is_hidden)");
     }

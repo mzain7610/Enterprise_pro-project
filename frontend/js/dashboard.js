@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const alertsList = document.getElementById("alertsList");
   const alertForm = document.getElementById("alertForm");
   const shiftAlertsList = document.getElementById("shiftAlerts");
+  const shiftAlertRules = document.getElementById("shiftAlertRules");
   const shiftAlertCount = document.getElementById("shiftAlertCount");
   const refreshShiftAlerts = document.getElementById("refreshShiftAlerts");
   const createShiftAlertBtn = document.getElementById("createShiftAlertBtn");
@@ -199,7 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const renderApplications = (apps) => {
     if (!apps.length) {
-      container.innerHTML = "<p class=\"empty-state\">No applications match your filters.</p>";
+      container.innerHTML = "<div class=\"empty-state\"><p>You haven't applied to any jobs yet.</p><p><a href=\"jobs.html\" class=\"btn btn-primary\">Browse Jobs</a></p></div>";
       return;
     }
 
@@ -318,7 +319,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!savedContainer) return;
 
     if (!jobs.length) {
-      savedContainer.innerHTML = "<p class=\"empty-state\">No saved jobs yet.</p>";
+      savedContainer.innerHTML = "<div class=\"empty-state\"><p>You haven't saved any jobs yet.</p><p><a href=\"jobs.html\" class=\"btn btn-primary\">Browse Jobs</a></p></div>";
       return;
     }
 
@@ -347,16 +348,40 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loadSavedJobs = async () => {
     if (!savedContainer) return;
     try {
+      console.log('Loading saved jobs...');
       const res = await authFetch(`${API}/saved-jobs`);
       const jobs = await readResponsePayload(res);
       if (!res.ok) {
-        savedContainer.innerHTML = "<p class=\"empty-state\">Failed to load saved jobs.</p>";
+        console.error('Failed to load saved jobs:', jobs);
+        savedContainer.innerHTML = "<p class=\"empty-state\">Failed to load saved jobs. Please try refreshing the page.</p>";
         return;
       }
+      console.log('Saved jobs loaded:', jobs);
       renderSavedJobs(jobs || []);
     } catch (err) {
-      console.error(err);
-      savedContainer.innerHTML = "<p class=\"empty-state\">Server error.</p>";
+      console.error('Error loading saved jobs:', err);
+      savedContainer.innerHTML = "<p class=\"empty-state\">Server error loading saved jobs. Please check your connection.</p>";
+    }
+  };
+
+  const loadApplications = async () => {
+    if (!container) return;
+    try {
+      console.log('Loading applications...');
+      const res = await authFetch(`${API}/applications/my`);
+      const data = await readResponsePayload(res);
+      if (!res.ok) {
+        console.error('Failed to load applications:', data);
+        container.innerHTML = "<p class=\"empty-state\">Failed to load applications. Please try refreshing the page.</p>";
+        return;
+      }
+      console.log('Applications loaded:', data);
+      allApps = Array.isArray(data) ? data : [];
+      setStats(allApps);
+      renderApplications(allApps);
+    } catch (err) {
+      console.error('Error loading applications:', err);
+      container.innerHTML = "<p class=\"empty-state\">Server error loading applications. Please check your connection.</p>";
     }
   };
 
@@ -575,7 +600,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (!activeItems.length) {
-      shiftAlertsList.innerHTML = "<p class=\"empty-state\">No active shift alerts.</p>";
+      shiftAlertsList.innerHTML = "<div class=\"empty-state\"><p>No active shift alerts at the moment.</p><p>Shift alerts will appear here when employers post shift jobs that match your alert criteria.</p></div>";
       if (shiftAlertCount) shiftAlertCount.textContent = "0";
       return;
     }
@@ -613,16 +638,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loadShiftAlerts = async () => {
     if (!shiftAlertsList) return;
     try {
+      console.log('Loading shift alerts...');
       const res = await authFetch(`${API}/job-alerts/shift-notifications`);
       const data = await readResponsePayload(res);
       if (!res.ok) {
-        shiftAlertsList.innerHTML = "<p class=\"empty-state\">Failed to load shift alerts.</p>";
+        console.error('Failed to load shift alerts:', data);
+        shiftAlertsList.innerHTML = "<p class=\"empty-state\">Failed to load shift alerts. Please try refreshing the page.</p>";
         return;
       }
+      console.log('Shift alerts loaded:', data);
       renderShiftAlerts(data || []);
     } catch (err) {
-      console.error(err);
-      shiftAlertsList.innerHTML = "<p class=\"empty-state\">Server error.</p>";
+      console.error('Error loading shift alerts:', err);
+      shiftAlertsList.innerHTML = "<p class=\"empty-state\">Server error loading shift alerts. Please check your connection.</p>";
     }
   };
 
@@ -637,7 +665,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     if (!activeItems.length) {
-      jobAlertsList.innerHTML = "<p class=\"empty-state\">No matching job alerts with valid deadlines.</p>";
+      jobAlertsList.innerHTML = "<div class=\"empty-state\"><p>No matching job alerts at the moment.</p><p>Job alerts will appear here when new jobs match your alert criteria.</p></div>";
       if (jobAlertCount) jobAlertCount.textContent = "0";
       return;
     }
@@ -671,16 +699,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loadJobAlerts = async () => {
     if (!jobAlertsList) return;
     try {
+      console.log('Loading job alerts...');
       const res = await authFetch(`${API}/job-alerts/job-notifications`);
-const data = await readResponsePayload(res);
+      const data = await readResponsePayload(res);
       if (!res.ok) {
-        jobAlertsList.innerHTML = "<p class=\"empty-state\">Failed to load job alerts.</p>";
+        console.error('Failed to load job alerts:', data);
+        jobAlertsList.innerHTML = "<p class=\"empty-state\">Failed to load job alerts. Please try refreshing the page.</p>";
         return;
       }
+      console.log('Job alerts loaded:', data);
       renderJobAlerts(data || []);
     } catch (err) {
-      console.error(err);
-      jobAlertsList.innerHTML = "<p class=\"empty-state\">Server error.</p>";
+      console.error('Error loading job alerts:', err);
+      jobAlertsList.innerHTML = "<p class=\"empty-state\">Server error loading job alerts. Please check your connection.</p>";
     }
   };
 
@@ -1185,6 +1216,26 @@ const formatCentsToUsd = (cents) => {
       referralsList.innerHTML = "<p class=\"empty-state\">Server error.</p>";
     }
   };
+
+  const initDashboard = async () => {
+    await Promise.all([
+      loadApplications(),
+      loadShiftAlerts(),
+      loadJobAlerts(),
+      loadSavedJobs(),
+      loadAlerts(),
+      loadReferrals(),
+      loadReferralRewards(),
+      loadMyInterviews(),
+      loadMyBackgroundChecks(),
+      loadRecommendations()
+    ]).catch((err) => {
+      console.error("Dashboard initialization error:", err);
+    });
+  };
+
+  initDashboard();
+
   savedContainer?.addEventListener("click", async (event) => {
     const button = event.target.closest(".save-btn");
     if (!button) return;

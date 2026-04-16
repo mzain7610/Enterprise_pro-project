@@ -6,26 +6,28 @@
   <title>Menu | JobPortal</title>  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%232563eb' width='100' height='100'/><text x='50' y='65' font-size='50' font-weight='bold' text-anchor='middle' fill='white' font-family='system-ui'>JP</text></svg>">  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/icons.css" />
   <link rel="stylesheet" href="css/global.css" />
 </head>
 <body class="menu-page">
   <nav class="navbar">
     <div class="nav-left">
       <a href="./index.html" class="logo"><span class="logo-mark" aria-hidden="true">JP</span> JobPortal</a>
+    </div>
+
       <a href="index.html" class="nav-link">Home</a>
       <a href="jobs.html" class="nav-link">Jobs</a>
       <a href="dashboard.html" id="dashboardLink" class="nav-link">Dashboard</a>
-      <a href="menu.html" id="menuLink" class="nav-link">Menu</a>
+      <a href="menu.html" id="menuLink" class="nav-link nav-active">Menu</a>
       <a href="profile.html" id="profileLink" class="nav-link">Profile</a>
       <a href="post-jobs.html" id="postJobLink" class="nav-link">Post Job</a>
       <a href="admin.html" id="adminLink" class="nav-link">Admin</a>
       <a href="login.html" id="loginLink" class="nav-link">Login</a>
-    </div>
-<a href="profile.html" class="nav-profile-chip" aria-label="Profile">
-      <span class="nav-profile-avatar"><i class="fa-solid fa-user"></i></span>
-    </a>
-    <button id="logoutBtn" class="btn btn-outline">Logout</button>
+      <a href="profile.html" class="nav-profile-chip" aria-label="Profile">
+        <span class="nav-profile-avatar"><i class="fa-solid fa-user"></i></span>
+      </a>
+      <button id="themeToggle" class="btn btn-ghost">🌙</button>
+      <button id="logoutBtn" class="btn btn-outline">Logout</button>
   </nav>
 
   <main class="container fade-up">

@@ -260,6 +260,11 @@ window.location.href = "login.html";
     }
   }
 
+  if (paymentStatus === "cancel" && mode === "create") {
+    showError("Premium payment was canceled.");
+    window.history.replaceState({}, document.title, "post-jobs.html");
+  }
+
   const donationModal = document.getElementById("donationModal");
 const postPaymentModal = document.getElementById("postPaymentModal");
   let pendingPremiumJob = null;

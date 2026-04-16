@@ -40,7 +40,21 @@
     if (profileLink) profileLink.style.display = "inline-block";
     if (userInfo) {
       userInfo.classList.remove("hidden");
-      userInfo.innerText = `ðŸ‘¤ ${uiUser.name || uiUser.email}`;
+      userInfo.innerText = `👤 ${uiUser.name || uiUser.email}`;
+    }
+
+    const profileChip = document.querySelector("a.nav-profile-chip");
+    if (profileChip) {
+      const avatar = profileChip.querySelector(".nav-profile-avatar");
+      const photo = uiUser.photoUrl || uiUser.photo_url || uiUser.avatarUrl || uiUser.photoData || "";
+      if (photo) {
+        const resolvedPhoto = photo.startsWith("http") || photo.startsWith("data:") ? photo : `${window.API?.replace(/\/api$/, "") || ""}${photo}`;
+        if (avatar) {
+          avatar.innerHTML = `<img src="${resolvedPhoto}" alt="Profile" />`;
+        }
+      } else if (avatar) {
+        avatar.innerHTML = '<i class="fa-solid fa-user"></i>';
+      }
     }
 
     // Admin only
@@ -60,7 +74,7 @@
         bellLink.href = "dashboard.html#shift-alerts";
         bellLink.className = "nav-bell";
         bellLink.setAttribute("aria-label", "Shift alerts");
-        bellLink.innerHTML = '<span class="nav-bell-icon">ðŸ””</span>';
+        bellLink.innerHTML = '<span class="nav-bell-icon"><i class="fa-solid fa-bell"></i></span>';
 
         shiftBadge = document.createElement("span");
         shiftBadge.className = "nav-badge hidden";

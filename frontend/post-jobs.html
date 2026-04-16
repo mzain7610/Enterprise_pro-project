@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="css/icons.css" />
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/auth.css">
   <style>
@@ -155,7 +155,7 @@
       <a href="profile.html" class="nav-profile-chip" aria-label="Profile">
         <span class="nav-profile-avatar"><i class="fa-solid fa-user"></i></span>
       </a>
-      <button id="themeToggle" class="btn btn-ghost">&#127769;</button>
+      <button id="themeToggle" class="btn btn-ghost">🌙</button>
       <button id="logoutBtn" class="btn btn-outline">Logout</button>
   </nav>
 
@@ -267,9 +267,9 @@
               <div class="form-group">
 <label class="form-label">Salary range ($)</label>
                 <div style="display:flex;gap:8px;align-items:center;">
-                  <input type="number" id="salaryMin" name="salary_min" class="form-input" placeholder="Min e.g. 30000" min="0" step="500" style="flex:1;">
+                  <input type="number" id="salaryMin" name="salary_min" class="form-input" placeholder="Min e.g. 30000" min="0" step="any" style="flex:1;">
                   <span style="opacity:.6;white-space:nowrap;">to</span>
-                  <input type="number" id="salaryMax" name="salary_max" class="form-input" placeholder="Max e.g. 60000" min="0" step="500" style="flex:1;">
+                  <input type="number" id="salaryMax" name="salary_max" class="form-input" placeholder="Max e.g. 60000" min="0" step="any" style="flex:1;">
                 </div>
                 <p class="p-muted" style="margin-top:6px;">Leave blank to mark as competitive / unspecified.</p>
               </div>

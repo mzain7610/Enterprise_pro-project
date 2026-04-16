@@ -430,7 +430,7 @@ exports.loginUser = (req, res) => {
 /* GET CURRENT USER */
 exports.getMe = (req, res) => {
   db.query(
-    "SELECT id, name, email, role, phone, country, city, verified, is_admin, photo_url FROM users WHERE id = ?",
+    "SELECT id, name, email, role, phone, country, city, verified, is_admin FROM users WHERE id = ?",
     [req.user.id],
     (err, rows) => {
       if (err) return res.status(500).json({ error: err.message });
@@ -677,26 +677,34 @@ exports.updateEmployerProfile = (req, res) => {
 
 /* GET SKILLS FOR CURRENT USER */
 exports.getMySkills = (req, res) => {
-  db.query(
-    `SELECT
-      us.skill_id,
-      s.name,
-      COUNT(se.id) AS endorsements_count,
-      MAX(CASE WHEN se.endorsed_by_user_id = ? THEN 1 ELSE 0 END) AS endorsed_by_me
-     FROM user_skills us
-     JOIN skills s ON s.id = us.skill_id
-     LEFT JOIN skill_endorsements se
-       ON se.skill_id = us.skill_id
-      AND se.endorsed_user_id = us.user_id
-     WHERE us.user_id = ?
-     GROUP BY us.skill_id, s.name
-     ORDER BY endorsements_count DESC, s.name ASC`,
-    [req.user.id, req.user.id],
-    (err, rows) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json(rows || []);
+  // Check if skills table exists first
+  db.query("SHOW TABLES LIKE 'skills'", (err, tables) => {
+    if (err || !tables.length) {
+      // Skills tables don't exist yet, return empty array
+      return res.json([]);
     }
-  );
+    
+    db.query(
+      `SELECT
+        us.skill_id,
+        s.name,
+        COUNT(se.id) AS endorsements_count,
+        MAX(CASE WHEN se.endorsed_by_user_id = ? THEN 1 ELSE 0 END) AS endorsed_by_me
+       FROM user_skills us
+       JOIN skills s ON s.id = us.skill_id
+       LEFT JOIN skill_endorsements se
+         ON se.skill_id = us.skill_id
+        AND se.endorsed_user_id = us.user_id
+       WHERE us.user_id = ?
+       GROUP BY us.skill_id, s.name
+       ORDER BY endorsements_count DESC, s.name ASC`,
+      [req.user.id, req.user.id],
+      (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows || []);
+      }
+    );
+  });
 };
 
 /* GET SKILLS FOR ANY USER */

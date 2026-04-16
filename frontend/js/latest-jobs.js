@@ -52,7 +52,7 @@ async function loadLatestJobs() {
 
     const allJobs = jobs || [];
     (allJobs).slice(0, 6).forEach(job => {
-      box.innerHTML += renderJobCard(job, { includeSaveButton: true, saved: !!job.is_saved });
+      box.innerHTML += renderJobCard(job, { includeSaveButton: Number(job.is_approved) === 1, saved: !!job.is_saved });
     });
 
     const countText = `${allJobs.length}+`;
@@ -87,7 +87,7 @@ async function loadLatestJobs() {
     if (recommended) {
       const picks = getRecommendedJobs(allJobs);
       recommended.innerHTML = picks.length
-        ? picks.map((job) => renderJobCard(job, { includeSaveButton: true, saved: !!job.is_saved })).join("")
+        ? picks.map((job) => renderJobCard(job, { includeSaveButton: Number(job.is_approved) === 1, saved: !!job.is_saved })).join("")
         : "<p class=\"empty-state\">No recommendations yet. Search to personalize.</p>";
     }
   } catch (err) {
@@ -204,6 +204,9 @@ const renderJobCard = (job, options = {}) => {
   const verifiedBadge = job.company_name
     ? '<span class="badge badge-verified">Verified</span>'
     : "";
+  const pendingBadge = !job.is_approved
+    ? '<span class="badge badge-pending">Pending Approval</span>'
+    : "";
   const premiumClass = job.is_premium ? "premium-job" : "";
   const companyName = job.company_name || "Stealth Company";
   const companyLink = job.company_id
@@ -233,6 +236,7 @@ const renderJobCard = (job, options = {}) => {
           ${premiumBadge}
           ${shiftBadge}
           ${verifiedBadge}
+          ${pendingBadge}
           <span class="match-pill">${matchScore}% Match</span>
         </div>
       </div>

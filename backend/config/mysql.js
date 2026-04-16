@@ -20,10 +20,10 @@ const db = mysql.createPool({
 
 db.getConnection((err, connection) => {
   if (err) {
-    console.error("❌ MySQL connection failed:", err);
+    console.error("❌ MySQL connection error:", err.message);
     return;
   }
-  console.log("✅ MySQL connected");
+  console.log("✅ MySQL connected to job_portal database");
   connection.release();
 });
 

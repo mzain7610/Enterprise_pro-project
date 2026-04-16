@@ -5,7 +5,7 @@
   widget.id = "supportWidget";
   widget.innerHTML = `
     <div class="support-toggle-wrap">
-      <button id="supportToggle" class="support-toggle" type="button" aria-label="Open support chat">ðŸ’¬</button>
+      <button id="supportToggle" class="support-toggle" type="button" aria-label="Open support chat"><i class="fa-solid fa-robot"></i></button>
       <span id="supportUnreadBadge" class="support-unread-badge hidden">0</span>
     </div>
     <div id="supportPanel" class="support-panel hidden">

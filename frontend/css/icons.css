@@ -1,0 +1,104 @@
+/* Local icon replacement for Font Awesome - replaces CDN dependency */
+/* Uses Unicode symbols to eliminate external CDN tracking concerns */
+
+/* Base icon styles */
+.fa, .fa-solid, .fa-brands, .fa-regular {
+  display: inline-block;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin-right: 0.25em;
+}
+
+/* Common user/profile icons */
+.fa-user::before { content: "👤"; }
+.fa-user-plus::before { content: "👥"; }
+.fa-users::before { content: "👥"; }
+.fa-users-gear::before { content: "⚙️👥"; font-size: 0.9em; }
+
+/* Work/job icons */
+.fa-briefcase::before { content: "💼"; }
+.fa-magnifying-glass::before { content: "🔍"; }
+.fa-building::before { content: "🏢"; }
+.fa-building-columns::before { content: "🏦"; }
+.fa-star::before { content: "⭐"; }
+.fa-shield-halved::before { content: "🛡️"; }
+.fa-bolt::before { content: "⚡"; }
+.fa-lock::before { content: "🔒"; }
+.fa-chart-line::before { content: "📈"; }
+.fa-chart-simple::before { content: "📊"; }
+
+/* File/document icons */
+.fa-file-lines::before { content: "📄"; }
+.fa-file-pdf::before { content: "📕"; }
+.fa-file-csv::before { content: "📋"; }
+
+/* Status/action icons */
+.fa-circle-check::before { content: "✅"; }
+.fa-check::before { content: "✓"; }
+.fa-circle::before { content: "●"; }
+.fa-x::before { content: "✕"; }
+.fa-xmark::before { content: "✕"; }
+.fa-circle-xmark::before { content: "❌"; }
+.fa-arrow-left::before { content: "←"; }
+.fa-arrow-right::before { content: "→"; }
+.fa-arrow-up::before { content: "↑"; }
+.fa-arrow-down::before { content: "↓"; }
+.fa-arrow-trend-up::before { content: "📈"; }
+.fa-flag::before { content: "🚩"; }
+
+/* UI/interaction icons */
+.fa-bookmark::before { content: "🔖"; }
+.fa-bell::before { content: "🔔"; }
+.fa-envelope::before { content: "✉️"; }
+.fa-share-nodes::before { content: "↗️"; }
+.fa-pen-to-square::before { content: "✏️"; }
+.fa-pen-fancy::before { content: "✒️"; }
+.fa-eye::before { content: "👁️"; }
+.fa-gear::before { content: "⚙️"; }
+.fa-cog::before { content: "⚙️"; }
+.fa-wand-magic-sparkles::before { content: "✨"; }
+.fa-brain::before { content: "🧠"; }
+.fa-handshake::before { content: "🤝"; }
+.fa-heart::before { content: "❤️"; }
+
+/* Calendar/time icons */
+.fa-calendar::before { content: "📅"; }
+.fa-calendar-check::before { content: "✔️📅"; font-size: 0.9em; }
+.fa-clock::before { content: "🕐"; }
+.fa-clock-rotate-left::before { content: "↩️🕐"; font-size: 0.9em; }
+
+/* Money/payment icons */
+.fa-sack-dollar::before { content: "💰"; }
+.fa-credit-card::before { content: "💳"; }
+.fa-apple::before { content: "🍎"; }
+.fa-google-pay::before { content: "G•"; font-weight: bold; }
+.fa-paypal::before { content: "P"; font-weight: bold; }
+
+/* Communication icons */
+.fa-comments::before { content: "💬"; }
+.fa-message::before { content: "💬"; }
+.fa-circle-question::before { content: "❓"; }
+
+/* Navigation/direction icons */
+.fa-bullseye::before { content: "🎯"; }
+.fa-lightbulb::before { content: "💡"; }
+.fa-people-group::before { content: "👥"; }
+
+/* Additional utility icons */
+.fa-plus::before { content: "+"; font-weight: bold; }
+.fa-minus::before { content: "−"; font-weight: bold; }
+.fa-info-circle::before { content: "ℹ️"; }
+.fa-triangle-exclamation::before { content: "⚠️"; }
+.fa-compass::before { content: "🧭"; }
+.fa-pen::before { content: "✏️"; }
+.fa-rocket::before { content: "🚀"; }
+.fa-globe::before { content: "🌐"; }
+.fa-upload::before { content: "⬆️"; }
+.fa-download::before { content: "⬇️"; }
+.fa-cloud-arrow-up::before { content: "☁️⬆️"; font-size: 0.9em; }
+.fa-paper-plane::before { content: "✈️"; }

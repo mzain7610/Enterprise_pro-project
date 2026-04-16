@@ -62,7 +62,7 @@
     }
 
     companyReviewsGrid.innerHTML = reviews.map((review) => {
-      const stars = "â˜…â˜…â˜…â˜…â˜…".slice(0, review.rating) + "â˜†â˜†â˜†â˜†â˜†".slice(0, 5 - review.rating);
+      const stars = "★★★★★".slice(0, review.rating) + "☆☆☆☆☆".slice(0, 5 - review.rating);
       const verifiedBadge = Number(review.verified_review) === 1
         ? '<span style="display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;background:#dcfce7;color:#166534;border:1px solid #86efac;font-size:12px;font-weight:600;">Verified candidate review</span>'
         : "";

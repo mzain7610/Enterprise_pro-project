@@ -65,7 +65,7 @@ router.post(
   auth,
   validate({
     body: {
-      mode: { required: true, type: "string", enum: ["create", "upgrade"] },
+      mode: { required: true, type: "string", enum: ["create", "upgrade", "reboost"] },
       payment_method: { required: true, type: "string", enum: ALLOWED_PAYMENT_METHODS },
       donation_cents: { type: "number", coerce: true, min: 0, max: MAX_DONATION_CENTS },
       jobId: { type: "number", coerce: true, min: 1 }
@@ -75,11 +75,11 @@ router.post(
 
   const { mode, jobId, donation_cents, payment_method } = req.body;
 
-  if (!mode || !["create", "upgrade"].includes(mode)) {
+  if (!mode || !["create", "upgrade", "reboost"].includes(mode)) {
     return res.status(400).json({ message: "Invalid payment mode" });
   }
 
-  if (mode === "upgrade" && !jobId) {
+  if ((mode === "upgrade" || mode === "reboost") && !jobId) {
     return res.status(400).json({ message: "jobId is required" });
   }
 
@@ -96,10 +96,14 @@ router.post(
   try {
     const successUrl = mode === "upgrade"
       ? `${FRONTEND_URL}/admin.html?payment=success&mode=upgrade&jobId=${jobId}&session_id={CHECKOUT_SESSION_ID}`
+      : mode === "reboost"
+      ? `${FRONTEND_URL}/employer.html?payment=success&mode=reboost&jobId=${jobId}&session_id={CHECKOUT_SESSION_ID}`
       : `${FRONTEND_URL}/post-jobs.html?payment=success&mode=create&session_id={CHECKOUT_SESSION_ID}`;
 
     const cancelUrl = mode === "upgrade"
       ? `${FRONTEND_URL}/admin.html?payment=cancel`
+      : mode === "reboost"
+      ? `${FRONTEND_URL}/employer.html?payment=cancel`
       : `${FRONTEND_URL}/post-jobs.html?payment=cancel`;
 
     if (USE_MOCK_PAYMENTS) {
@@ -196,9 +200,13 @@ router.post(
           line_items: fallbackLineItems,
           success_url: mode === "upgrade"
             ? `${FRONTEND_URL}/admin.html?payment=success&mode=upgrade&jobId=${jobId}&session_id={CHECKOUT_SESSION_ID}`
+            : mode === "reboost"
+            ? `${FRONTEND_URL}/employer.html?payment=success&mode=reboost&jobId=${jobId}&session_id={CHECKOUT_SESSION_ID}`
             : `${FRONTEND_URL}/post-jobs.html?payment=success&mode=create&session_id={CHECKOUT_SESSION_ID}`,
           cancel_url: mode === "upgrade"
             ? `${FRONTEND_URL}/admin.html?payment=cancel`
+            : mode === "reboost"
+            ? `${FRONTEND_URL}/employer.html?payment=cancel`
             : `${FRONTEND_URL}/post-jobs.html?payment=cancel`,
           metadata: {
             mode,
@@ -230,7 +238,7 @@ router.post(
   validate({
     body: {
       sessionId: { required: true, type: "string", minLength: 3, maxLength: 255 },
-      mode: { required: true, type: "string", enum: ["create", "upgrade", "donation"] },
+      mode: { required: true, type: "string", enum: ["create", "upgrade", "reboost", "donation"] },
       jobId: { type: "number", coerce: true, min: 1 }
     }
   }),
@@ -256,7 +264,7 @@ router.post(
       if (String(metadata.mode || "") !== String(mode)) {
         return res.status(400).json({ message: "Session mode mismatch" });
       }
-      if (mode === "upgrade" && String(metadata.jobId || "") !== String(jobId || "")) {
+      if ((mode === "upgrade" || mode === "reboost") && String(metadata.jobId || "") !== String(jobId || "")) {
         return res.status(400).json({ message: "Session job mismatch" });
       }
     }
@@ -279,6 +287,35 @@ router.post(
           }
         );
       });
+    }
+
+    if (mode === "reboost") {
+      if (!jobId) return res.status(400).json({ message: "jobId is required" });
+
+      return db.query(
+        "SELECT posted_by FROM jobs WHERE id = ? LIMIT 1",
+        [jobId],
+        (jobErr, jobRows) => {
+          if (jobErr) return res.status(500).json({ message: "Failed to validate job" });
+          if (!jobRows.length) return res.status(404).json({ message: "Job not found" });
+
+          const postedBy = Number(jobRows[0].posted_by);
+          const isAdmin = Number(req.user.is_admin) === 1;
+          if (!isAdmin && postedBy !== Number(req.user.id)) {
+            return res.status(403).json({ message: "Not authorized to reboost this job" });
+          }
+
+          db.query(
+            "UPDATE jobs SET is_premium = 1, reboost_count = reboost_count + 1 WHERE id = ?",
+            [jobId],
+            (updateErr, result) => {
+              if (updateErr) return res.status(500).json({ message: "Failed to reboost job" });
+              if (result.affectedRows === 0) return res.status(404).json({ message: "Job not found" });
+              res.json({ message: "Job reboosted successfully" });
+            }
+          );
+        }
+      );
     }
 
     if (mode === "create") {

@@ -202,6 +202,7 @@ const syncCategoryFilterOptionsFromJobs = (jobs) => {
 const renderJobCard = (job, options = {}) => {
   const { includeSaveButton = true, saved = false } = options;
   const matchScore = getMatchScore(job);
+  const showSaveButton = includeSaveButton && Number(job.is_approved) === 1;
   const premiumBadge = job.is_premium
     ? '<span class="badge badge-premium">Premium</span>'
     : "";
@@ -210,6 +211,9 @@ const renderJobCard = (job, options = {}) => {
     : "";
   const verifiedBadge = job.company_name
     ? '<span class="badge badge-verified">Verified</span>'
+    : "";
+  const pendingBadge = Number(job.is_approved) !== 1
+    ? '<span class="badge badge-pending">Pending approval</span>'
     : "";
   const premiumClass = job.is_premium ? "premium-job" : "";
   const companyName = job.company_name || "Stealth Company";
@@ -241,6 +245,7 @@ const renderJobCard = (job, options = {}) => {
           ${premiumBadge}
           ${shiftBadge}
           ${verifiedBadge}
+          ${pendingBadge}
           <span class="match-pill">${matchScore}% Match</span>
         </div>
       </div>
@@ -258,7 +263,7 @@ const renderJobCard = (job, options = {}) => {
       <div class="job-card-actions">
         <a href="${buildJobDetailHref(job.id)}" class="btn btn-ghost job-action-btn" data-job-id="${job.id}">Details</a>
         <a href="apply.html?jobId=${job.id}" class="apply-btn job-action-btn" data-job-id="${job.id}"><i class="fa-solid fa-rocket"></i> Apply Now</a>
-        ${includeSaveButton ? `<button class="btn btn-outline save-btn" type="button" data-save-id="${job.id}" data-saved="${saved ? 1 : 0}">${saved ? "Saved" : "Save"}</button>` : ""}
+        ${showSaveButton ? `<button class="btn btn-outline save-btn" type="button" data-save-id="${job.id}" data-saved="${saved ? 1 : 0}">${saved ? "Saved" : "Save"}</button>` : ""}
       </div>
     </div>
   `;
